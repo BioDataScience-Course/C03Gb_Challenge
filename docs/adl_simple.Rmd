@@ -1,0 +1,54 @@
+---
+title: "my_model"
+author: "Les profs"
+output: html_notebook
+---
+
+<!-- Voici un exemple de modèle pour relever le challenge "wine". Copier ce document sous le nom de votre propre modèle, éditez-le, développez votre modèle et soumettez vos résultats (voir README.md). Bonnes chances ! -->
+
+## Résumé
+
+<!-- Décrivez ici dans les grandes lignes (5-10 max), les options mises en œuvre dans votre modèle pour en augmenter les performances. -->
+
+## Description des données
+
+```{r setup}
+SciViews::R
+library(mlearning)
+# Importation des deux jeux de données
+wine <- read("../data/wine.rds")
+wine2 <- read("../data/wine2.rds")
+```
+
+<!-- Effectuez ici les statistiques descriptives qui vous sont nécessaires pour appréhender les données, sans toutefois vous éterniser trop dessus (20min max). -->
+
+## Apprentissage
+
+<!-- Placez ici le code en phase d'apprentissage et commentez-le brièvement. -->
+
+```{r}
+set.seed(3643) # ATTENTION: utilisez ici un nombre différent pour chaque modèle!
+my_model <- mlLda(data = wine, quality ~ .)
+```
+
+## Test
+
+<!-- Placez ici le code concernant à la phase de test des performances de votre modèle avec un bref commentaire. -->
+
+```{r}
+conf <- confusion(cvpredict(my_model, cv.k = 5), wine$quality)
+plot(conf)
+summary(conf)
+```
+
+## Soumission
+
+<!-- Déployez votre modèle sur `wine2` et enregistrez votre classification dans `results/<nom_modele.rds>` avec un code similaire à celui ci-dessous. Ensuite soumettez vos résultats dans l'app shiny <ttps://sdd.umons.ac.be/C03Sa_ml_challenge> -->
+
+```{r}
+results <- predict(my_model, wine2)
+table(results)
+# ATTENTION: changez le nom du fichier ci-dessous pour refléter le nom de votre modèle!
+write$rds(results, "../results/my_model.rds")
+```
+
