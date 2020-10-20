@@ -1,5 +1,5 @@
 ---
-title: "my_model"
+title: "ADL"
 author: "Les profs"
 output: html_notebook
 ---
@@ -24,6 +24,12 @@ wine2 <- read("../data/wine2.rds")
 
 ## Apprentissage
 
+<!-- Donner un nom à votre modèle ici -->
+
+```{r}
+model <- "adl"
+```
+
 <!-- Placez ici le code en phase d'apprentissage et commentez-le brièvement. -->
 
 ```{r}
@@ -43,12 +49,13 @@ summary(conf)
 
 ## Soumission
 
-<!-- Déployez votre modèle sur `wine2` et enregistrez votre classification dans `results/<nom_modele.rds>` avec un code similaire à celui ci-dessous. Ensuite soumettez vos résultats dans l'app shiny <ttps://sdd.umons.ac.be/C03Sa_ml_challenge> -->
+<!-- Déployez votre modèle sur `wine2` et enregistrez votre classification dans `results/repos__modele.rds` avec un code similaire à celui ci-dessous. Ensuite soumettez vos résultats dans l'app shiny <https://sdd.umons.ac.be/C03Sa_challenge> -->
 
 ```{r}
 results <- predict(my_model, wine2)
 table(results)
-# ATTENTION: changez le nom du fichier ci-dessous pour refléter le nom de votre modèle!
-write$rds(results, "../results/my_model.rds")
+results_file <- paste0("../results/",
+  basename(dirname(getwd())),
+  "__", model, ".rds")
+write$rds(results, results_file)
 ```
-
