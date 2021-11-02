@@ -1,61 +1,74 @@
+<!--% Voici un exemple de modèle pour relever le challenge "wine". Copiez ce document sous le nom de votre propre modèle dans le sous-dossier `docs`, éditez-le, développez votre modèle et soumettez vos résultats (voir aussi README.md). Bonnes chances ! -->
+
+<!--% Donner un nom à votre modèle ici (pour plus de facilité, utilisez le même nom que celui que vous avez donné à ce fichier .Rmd). N'OUBLIEZ PAS DE MODIFIER CE NOM A CHAQUE NOUVELLE ITERATION et utilisez uniquement des lettres a-z, A-Z, des chiffres 0-9, un trait souligné (_) ou un signe moins (-). NE PAS REALISER CORRECTEMENT CETTE CONSIGNE VOUS EXPOSE A UNE DISQUALIFICATION POUR CE MODELE ! -->
+
+```{r model_name, echo=FALSE}
+model_name <- "adl_simple"
+```
+
+<!--% Indiquez les logins GitHub des membres du team ci dessous (remplaces 'login1' et 'login2' par vos logins respectifs). -->
+
+```{r authors_logins, echo=FALSE}
+authors_logins <- "login1, login2"
+```
+
+<!--% Ne touchez pas à l'entête YAML ci-dessous : elle sera générée automatiquement à partir des autres informations du document. -->
+
 ---
-title: "ADL"
-author: "Les profs"
+title: "`r paste(model_name, sub("^[^-]+-(.*)$", "\\1", basename(here::here())), sep = " - ")`"
+date: "`r Sys.time()`"
+author: "`r authors_logins`"
 output: html_notebook
 ---
 
-<!-- Voici un exemple de modèle pour relever le challenge "wine". Copier ce document sous le nom de votre propre modèle, éditez-le, développez votre modèle et soumettez vos résultats (voir README.md). Bonnes chances ! -->
-
 ## Résumé
 
-<!-- Décrivez ici dans les grandes lignes (5-10 max), les options mises en œuvre dans votre modèle pour en augmenter les performances. -->
+<!--% Décrivez ici dans les grandes lignes (5-10 max), les options mises en œuvre dans votre modèle pour en augmenter les performances par rapport au mpodèle de base proposé. -->
+
+
 
 ## Description des données
 
-```{r setup}
+```{r setup, echo=FALSE,include=FALSE}
 SciViews::R
 library(mlearning)
+repos <- basename(here::here())
 # Importation des deux jeux de données
-wine <- read("../data/wine.rds")
-wine2 <- read("../data/wine2.rds")
+wine <- read(here::here("data/wine.rds"))
+wine2 <- read(here::here("data/wine2.rds"))
 ```
 
-<!-- Effectuez ici les statistiques descriptives qui vous sont nécessaires pour appréhender les données, sans toutefois vous éterniser trop dessus (20min max). -->
+<!--% Effectuez ici les statistiques descriptives qui vous sont nécessaires pour appréhender les données, sans toutefois vous éterniser trop dessus (20min max). -->
+
+
 
 ## Apprentissage
 
-<!-- Donner un nom à votre modèle ici -->
+<!--% Placez ici le code en phase d'apprentissage et commentez-le brièvement. Appelez toujours votre modèle `my_model` ! -->
 
-```{r}
-model <- "adl"
-```
-
-<!-- Placez ici le code en phase d'apprentissage et commentez-le brièvement. -->
-
-```{r}
+```{r learning}
 set.seed(3643) # ATTENTION: utilisez ici un nombre différent pour chaque modèle!
 my_model <- mlLda(data = wine, quality ~ .)
 ```
 
 ## Test
 
-<!-- Placez ici le code concernant à la phase de test des performances de votre modèle avec un bref commentaire. -->
+<!--% Placez ici le code concernant la phase de test des performances de votre modèle avec un bref commentaire. -->
 
-```{r}
+```{r testing}
 conf <- confusion(cvpredict(my_model, cv.k = 5), wine$quality)
 plot(conf)
 summary(conf)
 ```
 
-## Soumission
+## Soumission du modèle
 
-<!-- Déployez votre modèle sur `wine2` et enregistrez votre classification dans `results/repos__modele.rds` avec un code similaire à celui ci-dessous. Ensuite soumettez vos résultats dans l'app shiny <https://sdd.umons.ac.be/C03Sa_challenge> -->
+<!--% Pour déployer votre modèle sur `wine2` et enregistrer votre classification dans `results/<repos>__<model_name>.rds`, exécutez le chunk suivant SANS LE MODIFIER. Ensuite soumettez vos résultats qui sont dans ce fichier à partir de l'app Shiny <https://sdd.umons.ac.be/C03Sa_challenge> (voir aussi dans le cours en ligne à la section correspondante). -->
 
-```{r}
+```{r results}
 results <- predict(my_model, wine2)
 table(results)
-results_file <- paste0("../results/",
-  basename(dirname(getwd())),
-  "__", model, ".rds")
-write$rds(results, results_file)
+res_file <- glue::glue("{repos}__{model_name}.rds")
+write$rds(results, here::here("results", res_file))
+message("Soumettre : results/", res_file)
 ```
